@@ -7,15 +7,10 @@
     style="color: white"
     id="form-post"
     method="POST"
-    action="/post-create/"
+    action="/post"
   >
     {% csrf_token %}
-    <textarea
-      id="text-content"
-      class="form-control col-md-11 mx-2"
-      placeholder="Type Here !"
-      name="content"
-    ></textarea>
+    {{ form.as_table }}
     <button
       type="submit"
       class="btn mb-2"
@@ -23,9 +18,5 @@
     >
       Post
     </button>
-  </form>
-  <br />
-  <br />
-  <div id="post-list" class="container"></div>
-</div>
-{% endblock %}
+  </form></div>
+  {% endblock %}
