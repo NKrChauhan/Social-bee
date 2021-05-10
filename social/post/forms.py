@@ -7,8 +7,3 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['content']
-
-    # def clean_data(self):
-    #     if(self.changed_data['content'].trim() != ""):
-    #         return raise ValidationError(_('Invalid value: no data in content'), code='invalid')
-    #     return self.cleaned_data
