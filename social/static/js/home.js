@@ -36,7 +36,6 @@ function clearTextArea(){
 }
 
 function addRemoveClass(element,x,action){
-  console.log(x)
   x.map(function(y){
     if (action === 1){
       element.classList.add(y)
