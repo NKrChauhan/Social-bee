@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Post
-from .serializer import PostSerializer
+from rest_framework import serializers
+from .models import Post,Like
+from .serializer import PostSerializer ,PostActionSerializer, PostDisplaySerializer
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
-from rest_framework.decorators import api_view, authentication_classes, authentication_classes, permission_classes 
+from rest_framework.decorators import action, api_view, authentication_classes, authentication_classes, permission_classes 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
@@ -22,7 +23,7 @@ REST API for fetching feeds at home page
 @api_view(['GET'])
 def listPostAPI(request,*args,**kwargs):
     posts = Post.objects.all()
-    serialized_data = PostSerializer(posts, many=True)
+    serialized_data = PostDisplaySerializer(posts, many=True)
     return Response(serialized_data.data)
 
 
@@ -69,3 +70,43 @@ def deletePostAPI(request, post_id,*args,**kwargs):
             return Response({"message":"Forbidden action"},status=403)      
     except:
         return Response({"message":"NotFound"},status = 404)
+
+"""
+REST API for operations on Post
+"""
+@permission_classes([IsAuthenticated])
+@api_view(['POST',])
+def ActionOnPostAPI(request,*args,**kwargs):
+    serializedAction = PostActionSerializer(data = request.data)
+    if serializedAction.is_valid(raise_exception=True):
+        data = serializedAction.validated_data
+        id = data.get("id")
+        action = data.get("action")
+        try:
+            obj = Post.objects.get(id=id)
+        except:
+            return Response({"message":"POST NotFound"},status=404)
+        if action == 'like':
+            if Like.objects.filter(user=request.user,post=obj).count() == 0:
+                obj.likes.add(request.user)
+                return Response({"message":"Liked!"},status=200)
+            else:
+                print(obj.likes)
+                return Response({"message":"already liked !"},status=200) 
+        elif action == 'unlike':
+            if Like.objects.filter(user=request.user,post=obj).count() > 0:
+                obj.likes.remove(request.user)
+                return Response({"message":"UnLiked!"},status=200)
+            else:
+                return Response({"message":"already unliked !"},status=200) 
+        elif action == 'repost':
+            new_obj = Post.objects.create(
+                og_post = obj,
+                user = request.user, 
+                content = ""
+            )
+            return Response({"message":"Reposted!"},status=201)
+        else:
+            return Response({"message":"invalid action"},status=400)                 
+    else:
+        return Response({"message":"INVALID REQUEST"},status = 400)

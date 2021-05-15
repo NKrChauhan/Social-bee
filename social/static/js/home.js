@@ -6,15 +6,64 @@ function parseAllContent(jsonobjects) {
   }
   return finalFeeds;
 }
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
 const postlist = document.getElementById("post-list");
 loadPosts()
 
+function actionOnPost(id,action){
+  const csrftoken = getCookie('csrftoken');
+
+}
+
+function LikeBtn(post){
+  return "<button class='btn btn-outline-primary' onclick=actionOnPost("+post.id+",'like')>"+post.likes +" Likes</button>"
+}
+
+function UnlikeBtn(post){
+  return "<button class='btn btn-outline-danger' onclick=actionOnPost("+post.id+",'unlike')>UnLike</button>"
+}
+
+function SharePostBtn(post){
+  return "<button class='btn btn-outline-success' onclick=actionOnPost("+post.id+",'share')>Share</button>"
+}
+
+function parseReposts(el){
+  if (el.is_repost){
+    return "<div class='container border border-white border-top-0 my-3'>"+parseContent(el.og_post)+"</div>"
+  }else{
+    return " " 
+  }
+}
+
 function parseContent(el){
-  var element =  "<div class='container'style='color: white;background-color: rgba(255, 166, 0, 0.686);padding: 20px;border-radius: 2%;box-shadow: mediumvioletred;'><div class='row'><div class='col-md-2'>" +
+  var element =  "<div class='container'style='color: black;background-color: wheat;padding: 20px;border-radius: 2%;box-shadow: mediumvioletred;'><div class='row'><div class='col-md-2'>" +
   el.user +
-  "</div></div><hr /><div class='d-flex justify-content-center'>" +
+  "</div></div><br/><div> "+
   el.content +
-  "</div></div><br>"
+  parseReposts(el)+
+  "</div>"+
+  LikeBtn(el)+
+  " "+
+  UnlikeBtn(el)+
+  " "+
+  SharePostBtn(el)+
+  "</div><br>"
   return element
 }
 
@@ -31,6 +80,7 @@ function loadPosts(){
   };
   xhr.send();
 }
+
 function clearTextArea(){
   document.getElementById("text-content").value = ""
 }
@@ -98,3 +148,25 @@ document.getElementById("form-post").addEventListener("submit", function (event)
     }
   xhr.send(myFormData)
 });
+
+function actionOnPost(id,action){
+  var xhr = new XMLHttpRequest();
+  data = JSON.stringify({
+    id:id,
+    action:action
+  });
+  const method = "POST";
+  const url = "/post-action/";
+  const responseType = "json";
+  xhr.responseType = responseType;
+  xhr.open(method, url);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  xhr.setRequestHeader("X-CSRFToken",getCookie('csrftoken'))
+  xhr.onload = function () {
+    var serverRes = xhr.response;
+    console.log(serverRes);
+  };
+  xhr.send(data);
+}

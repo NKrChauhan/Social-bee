@@ -17,6 +17,8 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'template')
 
+MAX_LIMIT_POST_CAPTION = 100
+POST_ACTIONS = ['repost','like','unlike']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
