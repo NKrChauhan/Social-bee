@@ -11,9 +11,9 @@ from django.urls import path
 
 urlpatterns = [
     path('', homeview),
-    path('feeds/', listPostAPI),
-    path('post-create/', creationPostAPI),
-    path('post-delete/<int:post_id>/', deletePostAPI),
-    path('post-detail/<int:post_id>/', detailPostAPI),
-    path('post-action/', ActionOnPostAPI),
+    path('api/feeds/', listPostAPI),
+    path('api/post-create/', creationPostAPI),
+    path('api/post-delete/<int:post_id>/', deletePostAPI),
+    path('api/post-detail/<int:post_id>/', detailPostAPI),
+    path('api/post-action/', ActionOnPostAPI),
 ]

@@ -70,7 +70,7 @@ function parseContent(el){
 function loadPosts(){
   var xhr = new XMLHttpRequest();
   const method = "GET";
-  const url = "/feeds";
+  const url = "/api/feeds";
   const responseType = "json";
   xhr.responseType = responseType;
   xhr.open(method, url);
@@ -156,7 +156,7 @@ function actionOnPost(id,action){
     action:action
   });
   const method = "POST";
-  const url = "/post-action/";
+  const url = "/api/post-action/";
   const responseType = "json";
   xhr.responseType = responseType;
   xhr.open(method, url);
