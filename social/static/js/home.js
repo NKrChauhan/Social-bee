@@ -40,7 +40,7 @@ function UnlikeBtn(post){
 }
 
 function SharePostBtn(post){
-  return "<button class='btn btn-outline-success' onclick=actionOnPost("+post.id+",'share')>Share</button>"
+  return "<button class='btn btn-outline-success' onclick=actionOnPost("+post.id+",'repost')>Share</button>"
 }
 
 function parseReposts(el){

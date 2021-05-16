@@ -91,7 +91,6 @@ def ActionOnPostAPI(request,*args,**kwargs):
                 obj.likes.add(request.user)
                 return Response({"message":"Liked!"},status=200)
             else:
-                print(obj.likes)
                 return Response({"message":"already liked !"},status=200) 
         elif action == 'unlike':
             if Like.objects.filter(user=request.user,post=obj).count() > 0:
@@ -100,13 +99,13 @@ def ActionOnPostAPI(request,*args,**kwargs):
             else:
                 return Response({"message":"already unliked !"},status=200) 
         elif action == 'repost':
-            new_obj = Post.objects.create(
+            Post.objects.create(
                 og_post = obj,
                 user = request.user, 
                 content = ""
             )
             return Response({"message":"Reposted!"},status=201)
         else:
-            return Response({"message":"invalid action"},status=400)                 
+            return Response({"message": f"invalid action {action}"},status=400)                 
     else:
         return Response({"message":"INVALID REQUEST"},status = 400)

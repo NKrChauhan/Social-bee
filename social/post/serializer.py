@@ -53,6 +53,6 @@ class PostActionSerializer(serializers.Serializer):
 
     def validate_action(self, value):
         if value not in Post_Action:
-            raise serializers.ValidationError("INVALID ACTION")
+            raise serializers.ValidationError("Validation:INVALID ACTION")
         else:
             return value
