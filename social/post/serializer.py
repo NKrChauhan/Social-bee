@@ -17,10 +17,12 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This Post is too long")
         return value
 
+# Level one only for post view
 class PostChildDisplaySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
     og_post = PostSerializer(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
+    is_repost = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
@@ -31,6 +33,9 @@ class PostChildDisplaySerializer(serializers.ModelSerializer):
     
     def get_likes(self,obj):
         return obj.likes.count()
+
+    def get_is_repost(self,obj):
+        return False
 
 class PostDisplaySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)

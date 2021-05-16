@@ -1,2 +1,28 @@
 /social/static_root/
 /djangoproject
+
+# React
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+social/social-web/node_modules
+social/social-web/.pnp
+social/social-web/.pnp.js
+
+# testing
+social/social-web/coverage
+
+# production
+social/social-web/build
+
+# misc
+social/social-web/.DS_Store
+social/social-web/.env.local
+social/social-web/.env.development.local
+social/social-web/.env.test.local
+social/social-web/.env.production.local
+
+social/social-web/npm-debug.log*
+social/social-web/yarn-debug.log*
+social/social-web/yarn-error.log*
