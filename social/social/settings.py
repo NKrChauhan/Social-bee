@@ -18,7 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'template')
 
 MAX_LIMIT_POST_CAPTION = 100
-POST_ACTIONS = ['repost','like','unlike']
+
+POST_ACTIONS = ['repost', 'like', 'unlike']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -29,7 +30,11 @@ SECRET_KEY = 'django-insecure-cuf1((7xtb^5+1qy@8m$o!+dod9)8r2tvlxgeus(9*9l=y&iv-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_URLS_REGEX = r'^/api/.*$'
 
 
 # Application definition
@@ -42,10 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'rest_framework',
+    'corsheaders',
     'post',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -137,4 +144,5 @@ REST_FRAMEWORK = {
 }
 
 if DEBUG == True:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append('rest_framework.renderers.BrowsableAPIRenderer')
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.BrowsableAPIRenderer')
