@@ -13,7 +13,7 @@ function PostList() {
     loadPosts(mycallback);
   }, []);
   return (
-    <div className="container" style={{ paddingTop: "100px" }}>
+    <div className="container" style={{ paddingTop: "70px" }}>
       {posts.map((item, index) => {
         return (
           <>

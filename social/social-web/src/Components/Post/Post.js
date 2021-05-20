@@ -19,8 +19,9 @@ function Post(props) {
       </div>
       <br />
       <p className="lead">{props.item.content}</p>
+      {props.item.content ? <br /> : ""}
       {props.item.og_post && props.level < 1 ? (
-        <div className="container border border-white border-top-0 my-3">
+        <div className="container border border-white my-3">
           <Post
             item={props.item.og_post}
             index={props.index + "-child"}
@@ -31,6 +32,7 @@ function Post(props) {
         ""
       )}
       <LikeBtn item={props.item} />
+      <span className="mx-2"> </span>
       <Share item={props.item} />
     </div>
   );

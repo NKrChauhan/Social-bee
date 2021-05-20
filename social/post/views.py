@@ -7,7 +7,7 @@ from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action, api_view, authentication_classes, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 # Create your views here.
 
@@ -35,9 +35,9 @@ REST API for creating the post
 """
 
 
-@permission_classes([IsAuthenticated, ])
-@authentication_classes([SessionAuthentication, ])
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, ])
+@permission_classes([IsAuthenticated, ])
 def creationPostAPI(request, *args, **kwargs):
     serailized_obj = PostSerializer(data=request.POST)
     if serailized_obj.is_valid(raise_exception=True):
@@ -69,8 +69,9 @@ REST API for fetching feeds detail
 """
 
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated, ])
+@authentication_classes([SessionAuthentication, BasicAuthentication, ])
 def deletePostAPI(request, post_id, *args, **kwargs):
     try:
         obj = Post.objects.get(id=post_id)
@@ -88,8 +89,9 @@ REST API for operations on Post
 """
 
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST', ])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, BasicAuthentication, ])
 def ActionOnPostAPI(request, *args, **kwargs):
     serializedAction = PostActionSerializer(data=request.data)
     if serializedAction.is_valid(raise_exception=True):

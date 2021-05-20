@@ -1,16 +1,20 @@
 function Form() {
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+  }
   return (
-    <div>
-      <div id="alert-div" class="alert" role="alert">
-        <i id="alert-glyph" class="fas" aria-hidden="true"></i>
-        <span id="alert-content" class="mb-0"></span>
+    <div className="container">
+      <div id="alert-div" className="alert" role="alert">
+        <i id="alert-glyph" className="fas" aria-hidden="true"></i>
+        <span id="alert-content" className="mb-0"></span>
       </div>
       <form
         className="container form-inline"
         style={{ color: "white" }}
         id="form-post"
         method="POST"
-        action="/api/post-create/"
+        onSubmit={handleSubmit}
       >
         <textarea
           id="text-content"
