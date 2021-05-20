@@ -1,15 +1,19 @@
 import "./App.css";
 import Navbar from "./Components/Generics/Navbar";
-import Form from "./Components/Post/Form";
-import PostList from "./Components/Post/PostList";
+import Register from "./Components/User/Register";
+// import Form from "./Components/Post/Form";
+// import PostList from "./Components/Post/PostList";
+// import Login from "./Components/User/Login";
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
       <header className="App-header">
-        <Navbar />
-        <Form />
-        <PostList />
+        {/* <Form /> */}
+        {/* <PostList /> */}
+        {/* <Login /> */}
+        <Register />
       </header>
     </div>
   );
