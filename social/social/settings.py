@@ -21,6 +21,8 @@ MAX_LIMIT_POST_CAPTION = 100
 
 POST_ACTIONS = ['repost', 'like', 'unlike']
 
+AUTH_USER_MODEL = 'user.User'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'post',
+    'user',
 ]
 
 MIDDLEWARE = [
