@@ -1,22 +1,15 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from rest_framework import serializers
 from .models import Post, Like
 from .serializer import PostSerializer, PostActionSerializer, PostDisplaySerializer
-from .forms import PostForm
-from django.contrib.auth.decorators import login_required
-from rest_framework.decorators import action, api_view, authentication_classes, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 # Create your views here.
 
-
-def homeview(request, *args, **kwargs):
-    return render(request, 'post/home.html', {})
+# def homeview(request, *args, **kwargs):
+#     return render(request, 'post/home.html', {})
 
 # REST APIs
-
 
 """
 REST API for fetching feeds at home page

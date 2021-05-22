@@ -1,5 +1,4 @@
 from .views import (
-    homeview,
     listPostAPI,
     creationPostAPI,
     detailPostAPI,
