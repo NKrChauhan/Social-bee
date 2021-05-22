@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import os
+from django.contrib.auth.hashers import make_password
 import random
 # Create your models here.
 
@@ -99,3 +100,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password, None, 'pbkdf2_sha256')
+        super(User, self).save(*args, **kwargs)
