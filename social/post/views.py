@@ -2,8 +2,8 @@ from .models import Post, Like
 from .serializer import PostSerializer, PostActionSerializer, PostDisplaySerializer
 from rest_framework.decorators import api_view, authentication_classes, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 # Create your views here.
 
 # def homeview(request, *args, **kwargs):
@@ -11,28 +11,25 @@ from rest_framework.response import Response
 
 # REST APIs
 
-"""
-REST API for fetching feeds at home page
-"""
-
 
 @api_view(['GET'])
 def listPostAPI(request, *args, **kwargs):
+    """
+    REST API for fetching feeds at home page
+    """
     posts = Post.objects.all()
     serialized_data = PostDisplaySerializer(posts, many=True)
     return Response(serialized_data.data, status=200)
 
 
-"""
-REST API for creating the post
-"""
-
-
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication, ])
+@authentication_classes([JWTAuthentication, ])
 @permission_classes([IsAuthenticated, ])
 def creationPostAPI(request, *args, **kwargs):
-    serailized_obj = PostSerializer(data=request.POST)
+    """
+    REST API for creating the post
+    """
+    serailized_obj = PostSerializer(data=request.data)
     if serailized_obj.is_valid(raise_exception=True):
         serailized_obj.save(user=request.user)
         return Response(serailized_obj.data, status=201)
@@ -40,32 +37,28 @@ def creationPostAPI(request, *args, **kwargs):
         return Response({"message": "the form data is overlimit or null"}, status=400)
 
 
-"""
-REST API for fetching feeds detail
-"""
-
-
 @api_view(['GET'])
 def detailPostAPI(request, post_id, *args, **kwargs):
+    """
+    REST API for fetching feeds detail
+    """
     status = 404
     try:
         obj = Post.objects.get(id=post_id)
-        serialized_data = PostSerializer(obj)
+        serialized_data = PostDisplaySerializer(obj)
         status = 200
         return Response(serialized_data.data, status=status)
     except:
         return Response({"message": "NotFound"}, status=status)
 
 
-"""
-REST API for fetching feeds detail
-"""
-
-
 @api_view(['POST', 'DELETE'])
+@authentication_classes([JWTAuthentication, ])
 @permission_classes([IsAuthenticated, ])
-@authentication_classes([SessionAuthentication, BasicAuthentication, ])
 def deletePostAPI(request, post_id, *args, **kwargs):
+    """
+    REST API for fetching feeds detail
+    """
     try:
         obj = Post.objects.get(id=post_id)
         if request.user == obj.user:
@@ -77,15 +70,13 @@ def deletePostAPI(request, post_id, *args, **kwargs):
         return Response({"message": "NotFound"}, status=404)
 
 
-"""
-REST API for operations on Post
-"""
-
-
 @api_view(['POST', ])
-@permission_classes([IsAuthenticated])
-@authentication_classes([SessionAuthentication, BasicAuthentication, ])
+@authentication_classes([JWTAuthentication, ])
+@permission_classes([IsAuthenticated, ])
 def ActionOnPostAPI(request, *args, **kwargs):
+    """
+    REST API for operations on Post
+    """
     serializedAction = PostActionSerializer(data=request.data)
     if serializedAction.is_valid(raise_exception=True):
         data = serializedAction.validated_data

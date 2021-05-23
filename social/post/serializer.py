@@ -2,10 +2,12 @@ from rest_framework import serializers
 from .models import Post
 from django.conf import settings
 from django.contrib.auth import get_user_model
+
 Max_Limit = settings.MAX_LIMIT_POST_CAPTION
 Post_Action = settings.POST_ACTIONS
 
-USER =  get_user_model()
+USER = get_user_model()
+
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This Post is too long")
         return value
 
+
 # Level one only for post view
 class PostChildDisplaySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
@@ -26,16 +29,18 @@ class PostChildDisplaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id','og_post','user','is_repost', 'content','likes','tiemstamp']
+        fields = ['id', 'og_post', 'user', 'is_repost',
+                  'content', 'likes', 'tiemstamp']
 
-    def get_user(self,obj):
+    def get_user(self, obj):
         return obj.user.username
-    
-    def get_likes(self,obj):
+
+    def get_likes(self, obj):
         return obj.likes.count()
 
-    def get_is_repost(self,obj):
+    def get_is_repost(self, obj):
         return False
+
 
 class PostDisplaySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
@@ -44,13 +49,15 @@ class PostDisplaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id','og_post','user','is_repost', 'content','likes','tiemstamp']
+        fields = ['id', 'og_post', 'user', 'is_repost',
+                  'content', 'likes', 'tiemstamp']
 
-    def get_user(self,obj):
+    def get_user(self, obj):
         return obj.user.username
-    
-    def get_likes(self,obj):
+
+    def get_likes(self, obj):
         return obj.likes.count()
+
 
 class PostActionSerializer(serializers.Serializer):
     id = serializers.IntegerField()
