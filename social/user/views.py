@@ -35,12 +35,7 @@ def register(request, *args, **kwargs):
     if not serializer.is_valid(raise_exception=True):
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
     user = serializer.save()
-    refresh = RefreshToken.for_user(user)
-    res = {
-        "refresh": str(refresh),
-        "access": str(refresh.access_token),
-    }
-    return Response(res, status.HTTP_201_CREATED)
+    return Response({"message": "login now!"}, status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
