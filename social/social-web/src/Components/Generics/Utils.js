@@ -1,3 +1,5 @@
+import axios from "axios";
+
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -37,23 +39,20 @@ function actionOnPost(id, action) {
   xhr.send(data);
 }
 
-function loadPosts(callback) {
-  var xhr = new XMLHttpRequest();
-  const method = "GET";
-  const url = "http://127.0.0.1:8000/api/feeds/";
-  const responseType = "json";
-  xhr.responseType = responseType;
-  xhr.open(method, url, true);
-  xhr.withCredentials = false;
-  xhr.onload = function () {
-    callback(xhr.response, xhr.status);
-  };
-  xhr.onerror = function () {
-    callback({ message: "unsuccessful request" });
-  };
-  xhr.send();
-}
+const axiosCallWithAuth = axios.create({
+  baseURL: "http://127.0.0.1:8000/api/",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "JWT ".concat(localStorage.getItem("access_token")),
+  },
+});
 
+const axiosCallWithoutAuth = axios.create({
+  baseURL: "http://127.0.0.1:8000/api/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 // function clearTextArea() {
 //   document.getElementById("text-content").value = "";
 // }
@@ -126,4 +125,4 @@ function loadPosts(callback) {
 //     xhr.send(myFormData);
 //   });
 
-export { actionOnPost, loadPosts };
+export { actionOnPost, axiosCallWithAuth, axiosCallWithoutAuth };

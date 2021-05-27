@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./login.css";
 import image from "./login.png";
 import swal from "sweetalert";
+import { axiosCallWithoutAuth } from "../Generics/Utils";
 
 function Register() {
   const [uname, setUname] = useState("");
@@ -9,20 +10,33 @@ function Register() {
   const [email, setEmail] = useState("");
   const [repass, setRePass] = useState("");
 
-  var user = {
-    uname: uname,
-    email: email,
-    pass: pass,
-    repass: repass,
-  };
   const handelSubmitRegister = (e) => {
     e.preventDefault();
-    console.log(user);
-    var loggedin = "false";
-    //    server handeling
-    loggedin = "true";
-    swal("Login Alert", "logged in !!");
-    if (loggedin === "false") swal("Login Alert", "uname or password is wrong");
+    if (repass !== pass) {
+      swal("Error", "Password doesn't match.");
+    } else {
+      var user = {
+        username: uname,
+        email: email,
+        password: pass,
+      };
+      axiosCallWithoutAuth
+        .post("user/register/", user)
+        .then((res) => {
+          if (res.status === 201) {
+            swal("Success", "Logged in");
+            setUname("");
+            setPass("");
+            setEmail("");
+            setRePass("");
+          } else {
+            swal("Status", res.data.message);
+          }
+        })
+        .catch((e) => {
+          swal("Error", e.message);
+        });
+    }
   };
   return (
     <div className="login-page d-flex justify-content-start">

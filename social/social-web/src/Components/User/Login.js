@@ -2,33 +2,59 @@ import React, { useState } from "react";
 import "./login.css";
 import image from "./login.png";
 import swal from "sweetalert";
+import { axiosCallWithoutAuth, axiosCallWithAuth } from "../Generics/Utils";
 
 function Login() {
-  const [uname, setUname] = useState("");
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [isauthenticated, setAuth] = useState("false");
-  // useEffect(() => {}, isauthenticated);
-  var user = {
-    uname: uname,
-    pass: pass,
-  };
+  const [isauthenticated, setAuth] = useState(false);
+
   const handelSubmitLogin = (e) => {
     e.preventDefault();
-    var loggedin = "false";
-    //    server handeling
-    loggedin = "true";
-    swal("Login Alert", "logged in !!");
-    if (loggedin === "false") swal("Login Alert", "uname or password is wrong");
+    var userCred = {
+      email: email,
+      password: pass,
+    };
+    axiosCallWithoutAuth
+      .post("user/login/", userCred)
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("access_token", res.data["access_token"]);
+          localStorage.setItem("refresh_token", res.data["refresh_token"]);
+          swal("Success", "Logged in");
+          setAuth(true);
+        } else {
+          swal("Status", res.data.message);
+        }
+      })
+      .catch((e) => {
+        swal("Error", e.message);
+      });
   };
   const handelSubmitLogout = (e) => {
     e.preventDefault();
-    // server handeling
-    setUname("");
-    setPass("");
-    setAuth("false");
-    swal("Looged Out", "Thanks and come again.");
+    var token = {
+      refresh_token: localStorage.getItem("refresh_token"),
+    };
+    axiosCallWithAuth
+      .post("user/logout/", token)
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          swal("Success", "Logged out");
+          setAuth(false);
+          setEmail("");
+          setPass("");
+        } else {
+          swal("Status", res.data.message);
+        }
+      })
+      .catch((e) => {
+        swal("Error", e.message);
+      });
   };
-  return isauthenticated === "false" ? (
+  return isauthenticated === false ? (
     <div className="login-page d-flex justify-content-start">
       <div className="col-md-6">
         <img
@@ -43,13 +69,13 @@ function Login() {
           <strong>LOGIN</strong>
           <hr />
           <div className="row">
-            <label className="colorRed col-md-6">Enter username : </label>
+            <label className="colorRed col-md-6">Enter email : </label>
             <input
-              placeholder="Enter the username"
-              value={uname}
+              placeholder="Enter Registered email"
+              value={email}
               type="text"
               className="col-md-6"
-              onChange={(e) => setUname(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="row">
@@ -76,10 +102,10 @@ function Login() {
       </div>
     </div>
   ) : (
-    <div className="colorRed container">
-      <h1>Welcome {user.uname}, Mate</h1>
+    <div className="colorRed container jumbotron">
+      <h1>Welcome {email}, Mate</h1>
       <form onSubmit={handelSubmitLogout}>
-        You are Aready logged in !
+        You are Aready logged in !...
         <button className="btn btn-cust">Logout Now</button>
       </form>
     </div>

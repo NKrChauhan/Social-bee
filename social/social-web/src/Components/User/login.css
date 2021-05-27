@@ -22,6 +22,7 @@
   width: 25%;
   /* float: right; */
   background-color: rgb(160, 95, 95);
+  margin: 10px 10px 10px 10px;
 }
 .img-fluid {
   margin-top: 30vh;

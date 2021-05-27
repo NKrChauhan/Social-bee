@@ -1,25 +1,29 @@
 import { useEffect, useState } from "react";
-import { loadPosts } from "../Generics/Utils";
+import { axiosCallWithoutAuth } from "../Generics/Utils";
 import Post from "./Post";
+import Form from "./Form";
 
 function PostList() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    const mycallback = (res, status) => {
-      if (status === 200) {
-        setPosts(res.reverse());
-      }
-    };
-    loadPosts(mycallback);
+    axiosCallWithoutAuth
+      .get("feeds/")
+      .then((res) => {
+        setPosts(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
   return (
-    <div className="container" style={{ paddingTop: "70px" }}>
+    <div className="container" style={{ paddingTop: "10px" }}>
+      <Form />
       {posts.map((item, index) => {
         return (
-          <>
+          <div key={index + "-post"}>
             <Post item={item} index={index} level={0} />
             <br />
-          </>
+          </div>
         );
       })}
     </div>
