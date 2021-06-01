@@ -20,7 +20,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'template')
 
 MAX_LIMIT_POST_CAPTION = 100
 
-POST_ACTIONS = ['repost', 'like', 'unlike']
+POST_ACTIONS = ['share', 'like']
 
 AUTH_USER_MODEL = 'user.User'
 

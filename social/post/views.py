@@ -3,7 +3,7 @@ from .serializer import PostSerializer, PostActionSerializer, PostDisplaySeriali
 from rest_framework.decorators import api_view, authentication_classes, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 # Create your views here.
 
@@ -31,10 +31,10 @@ def creationPostAPI(request, *args, **kwargs):
     """
     REST API for creating the post
     """
-    serailized_obj = PostSerializer(data=request.data)
-    if serailized_obj.is_valid(raise_exception=True):
-        serailized_obj.save(user=request.user)
-        return Response(serailized_obj.data, status=status.HTTP_201_CREATED)
+    serialized_obj = PostSerializer(data=request.data)
+    if serialized_obj.is_valid(raise_exception=True):
+        serialized_obj.save(user=request.user)
+        return Response(serialized_obj.data, status=status.HTTP_201_CREATED)
     else:
         return Response({"message": "the form data is overlimit or null"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -89,22 +89,17 @@ def ActionOnPostAPI(request, *args, **kwargs):
         if action == 'like':
             if Like.objects.filter(user=request.user, post=obj).count() == 0:
                 obj.likes.add(request.user)
-                return Response({"message": "Liked!"}, status=status.HTTP_200_OK)
+                return Response({"message": "liked"}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "already liked !"}, status=status.HTTP_200_OK)
-        elif action == 'unlike':
-            if Like.objects.filter(user=request.user, post=obj).count() > 0:
                 obj.likes.remove(request.user)
-                return Response({"message": "UnLiked!"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"message": "already unliked !"}, status=status.HTTP_200_OK)
-        elif action == 'repost':
+                return Response({"message": "unliked"}, status=status.HTTP_200_OK)
+        elif action == 'share':
             Post.objects.create(
                 og_post=obj,
                 user=request.user,
                 content=""
             )
-            return Response({"message": "Reposted!"}, status=status.HTTP_200_OK)
+            return Response({"message": "Shared"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": f"invalid action {action}"}, status=status.HTTP_400_BAD_REQUEST)
     else:

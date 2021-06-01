@@ -48,4 +48,4 @@ def logout(request, *args, **kwargs):
         token.blacklist()
         return Response({"message": "logged out successfully"}, status=status.HTTP_200_OK)
     except Exception as e:
-        return Response({"message": e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Bad Request"}, status=status.HTTP_400_BAD_REQUEST)

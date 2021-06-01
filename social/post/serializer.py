@@ -13,6 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'user', 'content']
+        read_only_fields = ('user',)
 
     def validate_content(self, value):
         if len(value) > Max_Limit:
