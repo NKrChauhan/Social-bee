@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const baseURL = "http://127.0.0.1:8000/api/";
+
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -16,43 +18,93 @@ function getCookie(name) {
   return cookieValue;
 }
 
-function actionOnPost(id, action) {
-  var xhr = new XMLHttpRequest();
-  var data = JSON.stringify({
-    id: id,
-    action: action,
-  });
-  const method = "POST";
-  const url = "http://127.0.0.1:8000/api/post-action/";
-  const responseType = "json";
-  xhr.responseType = responseType;
-  xhr.open(method, url, true);
-  xhr.withCredentials = false;
-  xhr.setRequestHeader("Content-Type", "application/json");
-  // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-  xhr.onload = function () {
-    var serverRes = xhr.response;
-    console.log(serverRes);
-  };
-  xhr.send(data);
-}
-
 const axiosCallWithAuth = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
     Authorization: "JWT ".concat(localStorage.getItem("access_token")),
+    "X-CSRFToken": getCookie("csrftoken"),
   },
 });
 
 const axiosCallWithoutAuth = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: baseURL,
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+axiosCallWithAuth.interceptors.response.use(
+  (response) => {
+    console.log(response);
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error.config;
+    if (typeof error.response === "undefined") {
+      alert(
+        "A server/network error occurred. " +
+          "Looks like CORS might be the problem. " +
+          "Sorry about this - we will get it fixed shortly."
+      );
+      return Promise.reject(error);
+    }
+
+    if (
+      error.response.status === 401 &&
+      originalRequest.url === baseURL + "token/refresh/"
+    ) {
+      window.location.href = "/login/";
+      return Promise.reject(error);
+    }
+
+    if (
+      error.response.data.code === "token_not_valid" &&
+      error.response.status === 401 &&
+      error.response.statusText === "Unauthorized"
+    ) {
+      const refreshToken = localStorage.getItem("refresh_token");
+      if (refreshToken !== "undefined") {
+        const tokenParts = JSON.parse(atob(refreshToken.split(".")[1]));
+
+        // exp date in token is expressed in seconds, while now() returns milliseconds:
+        const now = Math.ceil(Date.now() / 1000);
+        console.log(tokenParts.exp);
+
+        if (tokenParts.exp > now) {
+          return axiosCallWithAuth
+            .post("/token/refresh/", { refresh: refreshToken })
+            .then((response) => {
+              localStorage.setItem("access_token", response.data.access_token);
+              localStorage.setItem(
+                "refresh_token",
+                response.data.refresh_token
+              );
+
+              axiosCallWithAuth.defaults.headers["Authorization"] =
+                "JWT " + response.data.access_token;
+              originalRequest.headers["Authorization"] =
+                "JWT " + response.data.access_token;
+              return axiosCallWithAuth(originalRequest);
+            })
+            .catch((err) => {
+              // console.log(err);
+            });
+        } else {
+          console.log("Refresh token is expired", tokenParts.exp, now);
+          window.location.href = "/login/";
+        }
+      } else {
+        console.log("Refresh token not available.");
+        window.location.href = "login/";
+      }
+    }
+    // specific error handling done elsewhere
+    return Promise.reject(error);
+  }
+);
+
 // function clearTextArea() {
 //   document.getElementById("text-content").value = "";
 // }
@@ -125,4 +177,4 @@ const axiosCallWithoutAuth = axios.create({
 //     xhr.send(myFormData);
 //   });
 
-export { actionOnPost, axiosCallWithAuth, axiosCallWithoutAuth };
+export { axiosCallWithAuth, axiosCallWithoutAuth };

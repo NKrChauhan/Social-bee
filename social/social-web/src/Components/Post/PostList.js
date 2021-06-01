@@ -9,7 +9,7 @@ function PostList() {
     axiosCallWithoutAuth
       .get("feeds/")
       .then((res) => {
-        setPosts(res.data);
+        setPosts(res.data.reverse());
       })
       .catch((e) => {
         console.log(e);

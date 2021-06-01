@@ -21,8 +21,8 @@ function Login() {
         if (res.status === 200) {
           localStorage.setItem("access_token", res.data["access_token"]);
           localStorage.setItem("refresh_token", res.data["refresh_token"]);
-          swal("Success", "Logged in");
           setAuth(true);
+          window.location.href = "/";
         } else {
           swal("Status", res.data.message);
         }
@@ -37,7 +37,7 @@ function Login() {
       refresh_token: localStorage.getItem("refresh_token"),
     };
     axiosCallWithAuth
-      .post("user/logout/", token)
+      .post("user/logout/", JSON.stringify(token))
       .then((res) => {
         if (res.status === 200) {
           localStorage.removeItem("access_token");
@@ -103,9 +103,8 @@ function Login() {
     </div>
   ) : (
     <div className="colorRed container jumbotron">
-      <h1>Welcome {email}, Mate</h1>
       <form onSubmit={handelSubmitLogout}>
-        You are Aready logged in !...
+        You are Aready {email}, logged in !...
         <button className="btn btn-cust">Logout Now</button>
       </form>
     </div>

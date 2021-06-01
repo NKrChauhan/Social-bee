@@ -1,7 +1,21 @@
+import { useState } from "react";
+import { axiosCallWithAuth } from "../Generics/Utils";
+
 function Form() {
+  const [content, setContent] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(e);
+    var data = {
+      content: content,
+    };
+    axiosCallWithAuth
+      .post("post-create/", data)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
   return (
     <div className="container my-5">
@@ -22,6 +36,9 @@ function Form() {
           placeholder="Type Here !"
           name="content"
           required
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
         ></textarea>
         <button
           type="submit"
