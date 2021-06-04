@@ -33,8 +33,9 @@ def creationPostAPI(request, *args, **kwargs):
     """
     serialized_obj = PostSerializer(data=request.data)
     if serialized_obj.is_valid(raise_exception=True):
-        serialized_obj.save(user=request.user)
-        return Response(serialized_obj.data, status=status.HTTP_201_CREATED)
+        post = serialized_obj.save(user=request.user)
+        post = PostDisplaySerializer(post)
+        return Response({"post_obj": post.data}, status=status.HTTP_201_CREATED)
     else:
         return Response({"message": "the form data is overlimit or null"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -94,12 +95,14 @@ def ActionOnPostAPI(request, *args, **kwargs):
                 obj.likes.remove(request.user)
                 return Response({"message": "unliked"}, status=status.HTTP_200_OK)
         elif action == 'share':
-            Post.objects.create(
+            obj = Post.objects.create(
                 og_post=obj,
                 user=request.user,
                 content=""
             )
-            return Response({"message": "Shared"}, status=status.HTTP_200_OK)
+            obj.save()
+            data = PostDisplaySerializer(obj)
+            return Response({"message": "Shared", "post_obj": data.data}, status=status.HTTP_200_OK)
         else:
             return Response({"message": f"invalid action {action}"}, status=status.HTTP_400_BAD_REQUEST)
     else:

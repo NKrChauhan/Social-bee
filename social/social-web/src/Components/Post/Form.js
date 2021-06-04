@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { axiosCallWithAuth } from "../Generics/Utils";
 
-function Form() {
+function Form(props) {
   const [content, setContent] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
@@ -11,7 +11,7 @@ function Form() {
     axiosCallWithAuth
       .post("post-create/", data)
       .then((res) => {
-        console.log(res);
+        props.action(res.data.post_obj);
       })
       .catch((e) => {
         console.log(e);

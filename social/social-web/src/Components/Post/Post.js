@@ -33,7 +33,7 @@ function Post(props) {
       )}
       <LikeBtn item={props.item} />
       <span className="mx-2"> </span>
-      <Share item={props.item} />
+      <Share item={props.item} sharecallback={props.sharecallback} />
     </div>
   );
 }

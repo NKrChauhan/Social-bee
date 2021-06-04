@@ -11,7 +11,8 @@ function Share(props) {
       .post("post-action/", data)
       .then((res) => {
         if (res.data.message === "Shared") {
-          window.location.href = "/";
+          props.sharecallback(res.data.post_obj);
+          console.log(res.data.post_obj);
         } else {
           swal("Error", "Something went wrong");
         }

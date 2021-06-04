@@ -15,13 +15,25 @@ function PostList() {
         console.log(e);
       });
   }, []);
+  useEffect(() => {}, [posts]);
+  const handleShare = (data) => {
+    setPosts([data, ...posts]);
+  };
+  const handlePost = (data) => {
+    setPosts([data, ...posts]);
+  };
   return (
     <div className="container" style={{ paddingTop: "10px" }}>
-      <Form />
+      <Form action={handlePost} />
       {posts.map((item, index) => {
         return (
           <div key={index + "-post"}>
-            <Post item={item} index={index} level={0} />
+            <Post
+              item={item}
+              index={index}
+              level={0}
+              sharecallback={handleShare}
+            />
             <br />
           </div>
         );
