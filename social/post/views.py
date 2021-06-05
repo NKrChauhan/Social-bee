@@ -15,11 +15,14 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def listPostAPI(request, *args, **kwargs):
+def listPostAPI(request, username=None, *args, **kwargs):
     """
     REST API for fetching feeds at home page
     """
-    posts = Post.objects.all()
+    if(username is None or username == ""):
+        posts = Post.objects.all()
+    else:
+        posts = Post.objects.filter(user__username__iexact=username)
     serialized_data = PostDisplaySerializer(posts, many=True)
     return Response(serialized_data.data, status=status.HTTP_200_OK)
 

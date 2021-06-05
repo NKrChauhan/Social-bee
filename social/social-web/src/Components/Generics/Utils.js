@@ -97,7 +97,7 @@ axiosCallWithAuth.interceptors.response.use(
         }
       } else {
         console.log("Refresh token not available.");
-        window.location.href = "login/";
+        window.location.href = "/login/";
       }
     }
     // specific error handling done elsewhere

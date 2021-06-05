@@ -18,6 +18,7 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
+            <Route path="/user/:username" children={<PostList />} />
             <Route path="/">
               <PostList />
             </Route>

@@ -2,19 +2,26 @@ import { useEffect, useState } from "react";
 import { axiosCallWithoutAuth } from "../Generics/Utils";
 import Post from "./Post";
 import Form from "./Form";
+import { useParams } from "react-router";
 
 function PostList() {
   const [posts, setPosts] = useState([]);
+  var { username } = useParams();
   useEffect(() => {
+    let uri = "feeds/";
+    console.log(username);
+    if (username) {
+      uri = "feeds/" + username + "/";
+    }
     axiosCallWithoutAuth
-      .get("feeds/")
+      .get(uri)
       .then((res) => {
         setPosts(res.data.reverse());
       })
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [username]);
   useEffect(() => {}, [posts]);
   const handleShare = (data) => {
     setPosts([data, ...posts]);
@@ -23,8 +30,8 @@ function PostList() {
     setPosts([data, ...posts]);
   };
   return (
-    <div className="container" style={{ paddingTop: "10px" }}>
-      <Form action={handlePost} />
+    <div className="container" style={{ paddingTop: "100px" }}>
+      {!username && <Form action={handlePost} />}
       {posts.map((item, index) => {
         return (
           <div key={index + "-post"}>

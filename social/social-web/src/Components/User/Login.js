@@ -46,6 +46,7 @@ function Login() {
           setAuth(false);
           setEmail("");
           setPass("");
+          window.location.href = "/";
         } else {
           swal("Status", res.data.message);
         }
