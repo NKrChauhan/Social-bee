@@ -9,7 +9,6 @@ function PostList() {
   var { username } = useParams();
   useEffect(() => {
     let uri = "feeds/";
-    console.log(username);
     if (username) {
       uri = "feeds/" + username + "/";
     }
@@ -30,7 +29,8 @@ function PostList() {
     setPosts([data, ...posts]);
   };
   return (
-    <div className="container" style={{ paddingTop: "100px" }}>
+    <div className="container">
+      {username && <div style={{ paddingTop: "100px" }}></div>}
       {!username && <Form action={handlePost} />}
       {posts.map((item, index) => {
         return (

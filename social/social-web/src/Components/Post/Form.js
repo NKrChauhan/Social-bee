@@ -43,7 +43,7 @@ function Form(props) {
         <button
           type="submit"
           className="btn mb-2"
-          style={{ backgroundColor: "darkred", color: "white", border: "15%" }}
+          style={{ backgroundColor: "#35487c", color: "white", border: "15%" }}
         >
           Post
         </button>
