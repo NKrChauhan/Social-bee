@@ -44,6 +44,7 @@ def creationPostAPI(request, *args, **kwargs):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def detailPostAPI(request, post_id, *args, **kwargs):
     """
     REST API for fetching feeds detail
