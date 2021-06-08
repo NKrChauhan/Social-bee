@@ -1,0 +1,7 @@
+.glow {
+  box-shadow: none;
+}
+.glow:hover,
+.glow:active {
+  box-shadow: 0 0 5px rgb(130, 109, 70), inset 0 0 10px rgb(105, 143, 192);
+}

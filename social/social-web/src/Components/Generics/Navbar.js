@@ -4,7 +4,7 @@ function Navbar(props) {
   return (
     <nav
       className="navbar navbar-dark navbar-expand-lg fixed-top"
-      style={{ backgroundColor: "#572b33" }}
+      style={{ backgroundColor: "#3c487c" }}
     >
       <span className="navbar-brand">
         SOcIaL
