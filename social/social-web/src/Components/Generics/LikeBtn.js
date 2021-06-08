@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 
 function LikeBtn(props) {
   const [likes, setLikes] = useState(props.item.likes);
+  useEffect(() => {
+    setLikes(props.item.likes);
+  }, [props.item.likes]);
   useEffect(() => {}, [likes]);
   const likeHandle = () => {
     var data = {
@@ -17,7 +20,6 @@ function LikeBtn(props) {
           setLikes(likes + 1);
         } else if (res.data.message === "unliked") {
           setLikes(likes - 1);
-          console.log(likes, res.data.message);
         } else {
         }
       })

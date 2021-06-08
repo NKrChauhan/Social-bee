@@ -10,14 +10,19 @@ function Share(props) {
     axiosCallWithAuth
       .post("post-action/", data)
       .then((res) => {
+        console.log(res);
         if (res.data.message === "Shared") {
-          props.sharecallback(res.data.post_obj);
-          console.log(res.data.post_obj);
+          if (props.sharecallback) {
+            props.sharecallback(res.data.post_obj);
+          } else {
+            swal("Prompt", "The post is shared !");
+          }
         } else {
           swal("Error", "Something went wrong");
         }
       })
       .catch((e) => {
+        console.log(e);
         swal("Error", "Something went wrong.are you logged in ?");
       });
   };
