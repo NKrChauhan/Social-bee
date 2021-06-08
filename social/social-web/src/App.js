@@ -2,6 +2,7 @@ import "./App.css";
 import Navbar from "./Components/Generics/Navbar";
 import Register from "./Components/User/Register";
 import PostList from "./Components/Post/PostList";
+import Post from "./Components/Post/Post";
 import Login from "./Components/User/Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -18,7 +19,12 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
-            <Route path="/user/:username" children={<PostList />} />
+            <Route path="/user/:username">
+              <PostList />
+            </Route>
+            <Route path="/post/:postId">
+              <Post />
+            </Route>
             <Route path="/">
               <PostList />
             </Route>
