@@ -6,6 +6,8 @@ import { useParams } from "react-router";
 
 function PostList() {
   const [posts, setPosts] = useState([]);
+  const [postSeen, setPostSeen] = useState([]);
+  const [numPostSeen, setNumPostSeen] = useState(10);
   var { username } = useParams();
   useEffect(() => {
     let uri = "feeds/";
@@ -21,18 +23,29 @@ function PostList() {
         console.log(e);
       });
   }, [username]);
-  useEffect(() => {}, [posts]);
+  useEffect(() => {
+    setPostSeen(posts.slice(0, numPostSeen));
+  }, [posts, numPostSeen]);
   const handleShare = (data) => {
     setPosts([data, ...posts]);
   };
   const handlePost = (data) => {
     setPosts([data, ...posts]);
   };
+  const handleLoadMore = () => {
+    console.log(numPostSeen, posts.length);
+    if (numPostSeen === posts.length) return;
+    else if (numPostSeen + 10 > posts.length) {
+      setNumPostSeen(posts.length);
+    } else {
+      setNumPostSeen(numPostSeen + 10);
+    }
+  };
   return (
     <div className="container">
       {username && <div style={{ paddingTop: "100px" }}></div>}
       {!username && <Form action={handlePost} />}
-      {posts.map((item, index) => {
+      {postSeen.map((item, index) => {
         return (
           <div key={index + "-post"}>
             <Post
@@ -45,6 +58,15 @@ function PostList() {
           </div>
         );
       })}
+      {numPostSeen !== posts.length && (
+        <button
+          className="btn btn-link"
+          style={{ color: "grey" }}
+          onClick={handleLoadMore}
+        >
+          --load more--
+        </button>
+      )}
     </div>
   );
 }

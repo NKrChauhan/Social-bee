@@ -62,7 +62,7 @@ function Login() {
           src={image}
           alt="img"
           className="img-fluid"
-          style={{ width: "40%" }}
+          style={{ width: "50%" }}
         />
       </div>
       <div className="col-md-6 loginForm">

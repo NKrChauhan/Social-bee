@@ -4,7 +4,7 @@ function ChildPost(props) {
     window.location.href = `/post/${post.id}`;
   };
   return (
-    <div className="container border border-white my-3">
+    <div className="container my-3 border border-black">
       <span
         className="lead"
         style={{
@@ -12,6 +12,7 @@ function ChildPost(props) {
           fontWeight: "120",
           color: "grey",
           fontSize: "13px",
+          padding: "1%",
         }}
       >
         Reposted
@@ -19,7 +20,7 @@ function ChildPost(props) {
       <button
         className="btn btn-sm btn-outline-primary"
         onClick={showDetails}
-        style={{ float: "inline-end" }}
+        style={{ float: "inline-end", margin: "1%" }}
       >
         show details
       </button>
@@ -27,10 +28,9 @@ function ChildPost(props) {
         className="container"
         style={{
           color: "black",
-          backgroundColor: "wheat",
           padding: "20px",
           borderRadius: "2%",
-          boxShadow: "mediumvioletred",
+          boxShadow: "blue",
         }}
         key={props.index !== undefined ? props.index : 0}
       >

@@ -34,7 +34,7 @@ function Post(props) {
       className="container glow"
       style={{
         color: "black",
-        backgroundColor: "wheat",
+        backgroundColor: "white",
         padding: "20px",
         borderRadius: "2%",
         boxShadow: "mediumvioletred",
